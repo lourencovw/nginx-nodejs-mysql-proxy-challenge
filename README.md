@@ -22,7 +22,7 @@ To use this repository, follow these steps:
   ```
 3. Run Docker Compose to build and start the services:
   ```
-  docker-compose up -d --build
+  docker compose up -d --build
   
   ```
 4. Access the application at http://localhost:8080/.

@@ -1,0 +1,25 @@
+services:
+  mysql:
+    build: ./mysql
+    volumes:
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      - MYSQL_PASSWORD_ROOT=root
+  node:
+    build: ./node
+    entrypoint: dockerize -wait tcp://mysql:3306 -timeout 60m node index.js
+    volumes:
+      - ./node:/home/node/app
+      - /home/node/app/node_modules
+    environment:
+      - MYSQL_PASSWORD_ROOT=root
+    depends_on:
+      - mysql
+  nginx:
+    build: ./nginx
+    entrypoint: dockerize -wait tcp://node:3000 -timeout 60m nginx -g 'daemon off;'
+    ports:
+      - 8080:80
+    depends_on:
+      - node
+  
